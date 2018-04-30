@@ -2,8 +2,8 @@
 #Follow these 2 steps to set up your site.
 
 #Step 1: give your study group a name and a short description:
-title: University of Toronto Coders
-description: "We are a group of students and researchers dedicated to learning about and sharing scientific coding techniques and knowledge in an effort to improve scientific research."
+title: Aarhus University Open Coders
+description: "We are a group of PhD students and researchers at AU who want to learn and share scientific coding skills and knowledge, so that we can make scientific research more open and reproducible."
 
 #Step 2: press the green 'Commit Changes' button at the bottom of this page.
 
@@ -16,9 +16,9 @@ description: "We are a group of students and researchers dedicated to learning a
 # Optional Configuration
 # None of these things need to be changed - but feel free!
 
-headlineSmall: "Welcome To The U of T Coders Group!"
-headlineMain: "Let's Work Together"
-avatar: "img/logos/logo_icon_dark.png"
+headlineSmall: "Welcome To AU Open Coders!"
+headlineMain: "Let's Learn and Teach Together"
+#avatar: "img/logos/logo_icon_dark.png"
 
 # Setup Google Calendar
 # Usage:
@@ -26,9 +26,9 @@ avatar: "img/logos/logo_icon_dark.png"
 # 2. change 'USER' in the example urls below to the username of the google account you made for your calendar
 # 3. set calendar_on: True.
 
-calendar_on: True
-calendar_embed_url: "https://www.google.com/calendar/embed?src=uoftcoders@gmail.com"
-calendar_ical_url: "https://www.google.com/calendar/ical/uoftcoders@gmail.com/public/basic.ics"
+calendar_on: False
+#calendar_embed_url: "https://www.google.com/calendar/embed?src=uoftcoders@gmail.com"
+#calendar_ical_url: "https://www.google.com/calendar/ical/uoftcoders@gmail.com/public/basic.ics"
 
 # ===============================
 # Categories for sorting lessons.

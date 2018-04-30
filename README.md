@@ -1,8 +1,6 @@
 Mozilla Study Groups
 ============
 
-[![Join the chat at https://gitter.im/UofTCoders/Lobby](https://badges.gitter.im/UofTCoders/studyGroup.svg)](https://gitter.im/UofTCoders/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 Welcome to [Mozilla Science Lab](https://www.mozillascience.org/)'s Study Group project! From here, we'll set you up with everything you need to start your own study group.
 
 ### Wait What's a 'Mozilla Study Group'?
@@ -13,14 +11,14 @@ Mozilla Study Groups are fun, informal meetups of your friends and colleagues fr
 
 Welcome to our Mozilla Study Group! A few things to do & know now that you're here:
 
- - **Watch the [Events](https://github.com/UofTCoders/Events) repo and/or this repo:** up in the top right, there's a button that says 'Watch'; click it, and set yourself to 'Watching'. This will send you email notifications of new discussions. If you only want to be notified about events (and not any other discussion topics), watch just the [Events](https://github.com/UofTCoders/Events) repo. If you want to stay updated on all group doings, watch this repo AND the Events repo. If you don't want email, but would like an alert just on GitHub, change the setting in Settings -> Notification Center (Settings is the little cog in the top right).
+ - **Watch the [Events](https://github.com/au-oc/Events) repo and/or this repo:** up in the top right, there's a button that says 'Watch'; click it, and set yourself to 'Watching'. This will send you email notifications of new discussions. If you only want to be notified about events (and not any other discussion topics), watch just the [Events](https://github.com/au-oc/Events) repo. If you want to stay updated on all group doings, watch this repo AND the Events repo. If you don't want email, but would like an alert just on GitHub, change the setting in Settings -> Notification Center (Settings is the little cog in the top right).
  - **Check out the issue tracker:** click on 'issues' in the sidebar on the right; this is where all the conversations this study groups is having live. Use this space to ask questions, request events, make suggestions, or just say hi.
  - **Read the code of conduct:** this Study Group is for everyone - we abide by a [set of rules](https://www.mozillascience.org/code-of-conduct/) that require everyone be treated with respect. Help us make a space where everyone feels welcome, and we'll all have a better time!
  - **Add yourself to the website:** If you'd like to appear on the website under the 'Who we Are' section, have a look at the `_data/members.yml`; send us a pull request with an entry for yourself, or open an issue and we'll do it for you.
 
 ## For Organizers/Instructors
 
-Check out the [`CONTRIBUTING` file](https://github.com/UofTCoders/studyGroup/blob/gh-pages/CONTRIBUTING.md) or [the page on the site](https://uoftcoders.github.io/studyGroup/CONTRIBUTING) for more details.
+Check out the [`CONTRIBUTING` file](https://github.com/au-oc/studyGroup/blob/gh-pages/CONTRIBUTING.md) or [the page on the site](https://au-oc.github.io/studyGroup/CONTRIBUTING) for more details.
 
 ### It's Broken, I Need Help
 

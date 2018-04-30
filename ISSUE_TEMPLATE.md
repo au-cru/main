@@ -1,6 +1,6 @@
 <!-- 
 If you're posting an event, volunteer, job or other
-opportunity to the UofT Coders Study Group, please address 
+opportunity to the AUOC Study Group, please address 
 all of the following points in your post:
 
 - Your Name, or Organization Name
