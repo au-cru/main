@@ -29,7 +29,7 @@
                         <i class="fa fa-user"></i>
                         <h4>{{ member.name }}</h4>
                         {% endif %}
-                        <p class="text-muted">{{ member.position }}</p>
+                        <!--<p class="text-muted">{{ member.position }}</p>-->
                         <p class="text-muted"><i>{{ member.degree }}</i></p>
                         {% if member.interests %}
                         Interests:
@@ -45,6 +45,7 @@
             </div>
             {% endif %}
             {% endfor %}
+            <!--
             <h2 class="section-subheading text-center">Contributors</h2>
             <div class="row">
                 {% for member in site.data.contributors %}
@@ -78,6 +79,7 @@
                     </div>
                 </div>
                 {% endfor %}
+                -->
             </div>
         </div>
     </section>
