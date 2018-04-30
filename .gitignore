@@ -3,3 +3,4 @@ _site/
 # Google calendar secret key
 client_secret.json
 
+.Rproj.user
