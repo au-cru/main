@@ -1,23 +1,28 @@
+if (!require(devtools)) install.packages("devtools")
+devtools::install_dev_deps()
 library(tidyverse)
 library(lubridate)
 library(glue)
-library(fs)
+library(assertr)
 
-session_details <- read_csv("_data/events.csv") %>%
+session_details <- read_csv(here::here("_data", "events.csv")) %>%
     arrange(date) %>%
     mutate(location = str_c("Building ", loc_building, ", room ", loc_room)) %>%
     # drop sessions that are not set (NA in location)
     filter(!is.na(location)) %>%
     mutate_at(vars(skill_level, program_language, spoken_language), str_to_title)
 
+session_details %>%
+    assert(in_set("Beginner", "Intermediate", "Advanced"), skill_level)
+
 # Find any existing posts, take the date, and filter out those sessions from the
 # session_details dataframe.
 keep_only_new_sessions <- function() {
-    existing_post_dates <- dir_ls("_posts", regexp = ".md$") %>%
+    existing_post_dates <- fs::dir_ls(here::here("_posts"), regexp = ".md$") %>%
         str_extract("[0-9]{4}-[0-9]{2}-[0-9]{2}")
 
     session_details %>%
-        filter(!date %in% existing_post_dates)
+        filter(!as.character(date) %in% existing_post_dates)
 }
 
 new_sessions <- keep_only_new_sessions()
@@ -25,7 +30,7 @@ new_sessions <- keep_only_new_sessions()
 # Create files in _posts/ -------------------------------------------------
 
 create_new_posts_with_content <- function(.data) {
-    new_post_filenames <- glue_data(.data, "_posts/{date}-{key}.md")
+    new_post_filenames <- glue_data(new_sessions, "{here::here('_posts')}/{date}-{key}.md")
 
     new_post_content <- .data %>%
         glue_data(
@@ -70,7 +75,7 @@ create_new_emails_for_session <- function(.data) {
             "
             R short workshop: {title}
 
-            {str_wrap(description)}
+            {description}
 
             - **When**: {day_month_format(date)}, from {start_time}-{end_time}
             - **Where**: {location}
@@ -78,15 +83,35 @@ create_new_emails_for_session <- function(.data) {
 
             *Installation instructions*:
 
-            You will need to install the appropriate programs. See the {program_language} section of the
-            [installation instructions page](https://au-oc.github.io/content/installation).
-            {needs_packages}
+            You will need to install the appropriate programs. See the {program_language} section of the [installation instructions page](https://au-oc.github.io/content/installation). {needs_packages}
             "
         )
 
-    email_file <- glue_data(.data, "_emails/{date}-{key}.md")
+    email_file <- glue_data(.data, "{here::here('_emails')}/{date}-{key}.md")
 
     map2(email_content, email_file, ~ write_lines(x = .x, path = .y))
 }
 
 create_new_emails_for_session(new_sessions)
+
+# Create a GitHub Issue of the session ------------------------------------
+
+post_gh_issue <- function(title, body, labels) {
+    # Get the authentication using the function devtools::github_pat() in the console.
+    devtools:::rule("Posting GitHub Issues")
+    cat("Posting ", title)
+    if (devtools:::yesno("Are you sure you want to post this event as an Issue?")) {
+        gh::gh(
+            "POST /repos/:owner/:repo/issues",
+            owner = "au-oc",
+            repo = "Events",
+            title = title,
+            body = body,
+            labels = array(c(labels))
+        )
+        usethis:::done("Event posted as an Issue to au-oc/Events.")
+        return(invisible())
+    }
+}
+
+
