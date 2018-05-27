@@ -27,19 +27,95 @@ keep_only_new_sessions <- function() {
 
 new_sessions <- keep_only_new_sessions()
 
+# Create a GitHub Issue of the session ------------------------------------
+
+post_gh_issue <- function(title, body, labels) {
+    # Will need to set up a GitHub PAT via (I think) the function
+    # devtools::github_pat() in the console.
+    devtools:::rule("Posting GitHub Issues")
+    cat("Posting `", title, "`\n\n")
+    if (!devtools:::yesno("Are you sure you want to post this event as an Issue?")) {
+        gh::gh(
+            "POST /repos/:owner/:repo/issues",
+            owner = "au-oc",
+            repo = "Events",
+            title = title,
+            body = body,
+            labels = array(c(labels))
+        )
+        usethis:::done("Event posted as an Issue to au-oc/Events.")
+        return(invisible())
+    } else {
+        message("Event not posted to Issue.")
+    }
+}
+
+# Format as eg August 23
+day_month <- function(.date) {
+    trimws(format(as.Date(.date), format = "%e %B"))
+}
+
+gh_issue_info <- function(.data) {
+    content <- .data %>%
+        mutate(needs_packages = ifelse(
+            !is.na(packages),
+            str_c(
+                "Please also install these packages: ",
+                str_replace_all(packages, " ", ", "), "."
+            ),
+            ""
+        )) %>%
+        mutate_at(vars(start_time, end_time), funs(strftime(., format = "%H:%M"))) %>%
+        glue_data(
+            "
+            {description}
+
+            - **When**: {day_month(date)}, from {start_time}-{end_time}
+            - **Where**: {location}
+            - **Skill level**: {skill_level}
+
+            *Installation instructions*:
+
+            You will need to install the appropriate programs. See the {program_language} section of the [installation instructions page](https://au-oc.github.io/content/installation). {needs_packages}
+            "
+        )
+
+    .data %>%
+        mutate(content = content, title = str_c(day_month(date), ", ", title)) %>%
+        select(title, content, skill_level, gh_labels, program_language)
+}
+
+create_gh_issues <- function(.data) {
+    .data %>%
+        gh_issue_info() %>%
+        pmap( ~ post_gh_issue(..1, ..2, c(..3, ..4, ..5)))
+}
+
+create_gh_issues(new_sessions)
+
 # Create files in _posts/ -------------------------------------------------
+# Adds the new sessions/events to the _posts folder.
 
 create_new_posts_with_content <- function(.data) {
-    new_post_filenames <- glue_data(new_sessions, "{here::here('_posts')}/{date}-{key}.md")
+    new_post_filenames <-
+        glue_data(new_sessions, "{here::here('_posts')}/{date}-{key}.md")
+
+    # Get the GitHub Issue URL for the event.
+    gh_issue_number <- gh::gh("GET /repos/:owner/:repo/issues",
+                              owner = "au-oc",
+                              repo = "Events") %>%
+        map_dfr(~ data_frame(title = .$title, url = .$html_url)) %>%
+        mutate(title = str_remove(title, "^.*[1-9], "))
 
     new_post_content <- .data %>%
+        left_join(gh_issue_number, by = "title") %>%
         glue_data(
             '
             ---
             title: "{title}"
             text: "{description}"
             location: "{location}"
-            #link: "github_issue"
+            link: "{url}"
             date: "{as.Date(date)}"
             startTime: "{start_time}"
             endTime: "{end_time}"
@@ -48,17 +124,15 @@ create_new_posts_with_content <- function(.data) {
         )
 
     # Save post content to file
+    fs::dir_create(here::here("_posts"))
     map2(new_post_content, new_post_filenames, ~ write_lines(x = .x, path = .y))
+    usethis:::done("Markdown posts created in _posts/ folder.")
+    return(invisible())
 }
 
 create_new_posts_with_content(new_sessions)
 
-
 # Create emails for sessions ----------------------------------------------
-
-day_month_format <- function(.date) {
-    trimws(format(as.Date(.date), format = "%e %B"))
-}
 
 create_new_emails_for_session <- function(.data) {
     email_content <- new_sessions %>%
