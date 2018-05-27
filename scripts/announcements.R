@@ -1,3 +1,23 @@
+# Setup and Usage ---------------------------------------------------------
+#
+# Will need to get a GitHub PAT to use some of these commands.
+# See [here](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/). Once you have the GitHub PAT, you will need to save this PAT in your
+# home directory ("~/") in a file called ".Renviron". Inside the file, type out:
+#
+#   GITHUB_PAT= # paste the PAT number after the equal sign
+#
+# NOTE: Keep this PAT **ONLY ON YOUR COMPUTER**. Don't save it to GitHub.
+#
+# This script can be used in a few ways. Either:
+# 1.    Open the main.Rproj, open the scripts/announcements.R, and "Source" the file
+#       using the button or the shortcut Ctrl-Shift-S.
+# 2.    Open R console and run the command "source('announcements.R')" when in the
+#       script folder.
+# 3.    Open the main.Rproj, run "source('scripts/announcements.R')" in the console.
+
+# Installation and Loading Packages ---------------------------------------
+# Running these lines will install the necessary packages.
+
 if (!require(devtools)) install.packages("devtools")
 devtools::install_dev_deps()
 library(tidyverse)
@@ -5,13 +25,16 @@ library(lubridate)
 library(glue)
 library(assertr)
 
+# Importing and Filtering the Event Data ----------------------------------
+
 session_details <- read_csv(here::here("_data", "events.csv")) %>%
     arrange(date) %>%
     mutate(location = str_c("Building ", loc_building, ", room ", loc_room)) %>%
     # drop sessions that are not set (NA in location)
     filter(!is.na(location)) %>%
-    mutate_at(vars(skill_level, program_language, spoken_language), str_to_title)
+    mutate_at(vars(skill_level, program_language, spoken_language, gh_labels), str_to_title)
 
+# Data checks to make sure it was imported correctly.
 session_details %>%
     assert(in_set("Beginner", "Intermediate", "Advanced"), skill_level)
 
