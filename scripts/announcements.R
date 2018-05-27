@@ -170,11 +170,11 @@ create_new_emails_for_session <- function(.data) {
         mutate_at(vars(start_time, end_time), funs(strftime(., format = "%H:%M"))) %>%
         glue_data(
             "
-            R short workshop: {title}
+            R short workshop: {title}, {day_month(date)}
 
             {description}
 
-            - **When**: {day_month_format(date)}, from {start_time}-{end_time}
+            - **When**: {day_month(date)}, from {start_time}-{end_time}
             - **Where**: {location}
             - **Skill level**: {skill_level}
 
@@ -184,31 +184,13 @@ create_new_emails_for_session <- function(.data) {
             "
         )
 
+    fs::dir_create(here::here("_emails"))
     email_file <- glue_data(.data, "{here::here('_emails')}/{date}-{key}.md")
+    usethis:::done("Files with email contents created.")
+    usethis:::todo("Open them and copy over into an email.")
 
     map2(email_content, email_file, ~ write_lines(x = .x, path = .y))
+    return(invisible())
 }
 
 create_new_emails_for_session(new_sessions)
-
-# Create a GitHub Issue of the session ------------------------------------
-
-post_gh_issue <- function(title, body, labels) {
-    # Get the authentication using the function devtools::github_pat() in the console.
-    devtools:::rule("Posting GitHub Issues")
-    cat("Posting ", title)
-    if (devtools:::yesno("Are you sure you want to post this event as an Issue?")) {
-        gh::gh(
-            "POST /repos/:owner/:repo/issues",
-            owner = "au-oc",
-            repo = "Events",
-            title = title,
-            body = body,
-            labels = array(c(labels))
-        )
-        usethis:::done("Event posted as an Issue to au-oc/Events.")
-        return(invisible())
-    }
-}
-
-
