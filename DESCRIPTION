@@ -1,0 +1,18 @@
+Package: main
+Version: 0.0.0.9000
+Title: Website for AUOC
+Description: Content for main website.
+Authors@R: person("Luke", "Johnston", email = "lwjohnst@gmail.com", role = c("aut", "cre"))
+Encoding: UTF-8
+LazyData: true
+ByteCompile: true
+Rmarkdown: list(markdown = TRUE)
+Imports: 
+    here,
+    tidyverse,
+    lubridate,
+    glue,
+    fs,
+    gh,
+    usethis,
+    assertr
