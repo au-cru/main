@@ -32,7 +32,8 @@ session_details <- read_csv(here::here("_data", "events.csv")) %>%
     mutate(location = str_c("Building ", loc_building, ", room ", loc_room)) %>%
     # drop sessions that are not set (NA in location)
     filter(!is.na(location)) %>%
-    mutate_at(vars(skill_level, program_language, spoken_language, gh_labels), str_to_title)
+    mutate_at(vars(skill_level, program_language, spoken_language, gh_labels), str_to_title) %>%
+    mutate_at(vars(start_time, end_time), funs(strftime(., format = "%H:%M", tz = "GMT")))
 
 # Data checks to make sure it was imported correctly.
 session_details %>%
