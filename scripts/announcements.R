@@ -86,9 +86,8 @@ gh_issue_info <- function(.data) {
                 "Please also install these packages: ",
                 str_replace_all(packages, " ", ", "), "."
             ),
-            ""
+            " using the `install.packages` command."
         )) %>%
-        mutate_at(vars(start_time, end_time), funs(strftime(., format = "%H:%M"))) %>%
         glue_data(
             "
             {description}
@@ -96,6 +95,7 @@ gh_issue_info <- function(.data) {
             - **When**: {day_month(date)}, from {start_time}-{end_time}
             - **Where**: {location}
             - **Skill level**: {skill_level}
+            - **What to bring**: Since this is an interactive code along, it would be best if you bring your laptop!
 
             *Installation instructions*:
 
@@ -165,9 +165,8 @@ create_new_emails_for_session <- function(.data) {
                 "Please also install these packages: ",
                 str_replace_all(packages, " ", ", "), "."
             ),
-            ""
+            " using the `install.packages` command."
         )) %>%
-        mutate_at(vars(start_time, end_time), funs(strftime(., format = "%H:%M"))) %>%
         glue_data(
             "
             R short workshop: {title}, {day_month(date)}
@@ -177,6 +176,7 @@ create_new_emails_for_session <- function(.data) {
             - **When**: {day_month(date)}, from {start_time}-{end_time}
             - **Where**: {location}
             - **Skill level**: {skill_level}
+            - **What to bring**: Since this is an interactive code along, it would be best if you bring your laptop!
 
             *Installation instructions*:
 
