@@ -1,14 +1,19 @@
 ---
 layout: page
-title: Contributing to UofT Coders
+title: Contributing to AU Open Coders
 ---
-Welcome to the Contributing guideline for UofT Coders. Thanks for taking the time to contribute! :clap::clap:  
 
-The following is a set of guidelines for contributing to the UofT Coders community, whether it be by teaching a lesson, fixing the website, helping to plan and organize our various events, or taking on a leadership role.
+> Note: Much of this contributing guideline came from the [UofTCoders](https://uoftcoders.github.io/studyGroup/CONTRIBUTING)
+
+Welcome to the Contributing guideline for AUOC. Thanks for taking the time to contribute! :clap::clap:  
+
+The following is a set of guidelines for contributing to the AUOC community,
+whether it be by teaching a lesson, fixing the website, helping to plan and
+organize our various events, or taking on a leadership role.
 
 ### Table of Contents
 
-1. [About UofT Coders](#about-uoft-coders)
+1. [About AUOC](#about-auoc)
     - [Code of Conduct](#code-of-conduct)
 
 2. [How You Can Contribute](#how-you-can-contribute)
@@ -19,22 +24,21 @@ The following is a set of guidelines for contributing to the UofT Coders communi
     - [Other Ways to Get Involved](#other-ways-to-get-involved)
 
 -----
-# About UofT Coders
 
-The UofT Coders group was formed to share and learn about coding techniques and
-best practices for computing and analysis in research. We hold weekly sessions
-in the format of code-alongs, coworking sessions or journal clubs/discussions.
-To see our previous and upcoming events, you can visit our [Events repo](https://github.com/UofTCoders/Events/issues).
-To learn more about our group, you can read our [constitution](https://github.com/UofTCoders/council/blob/master/Constitution.md).
+# About AUOC
+
+The AUOC group was formed to share and learn about coding techniques and
+best practices for computing and analysis in research. We hold frequent sessions
+in the format of mainly short code-alongs, but also longer workshops.
+To see our previous and upcoming events, you can visit our [Events repo](https://github.com/au-oc/Events/issues).
 
 ## Code of Conduct
 
-We adhere to a [Code of Conduct](https://github.com/UofTCoders/studyGroup/blob/gh-pages/codeOfConduct.md)
-and by participating, you agree to also uphold this code. Please report any
-unacceptable behaviour to uoftcoders@gmail.com. If you feel that the exec has
-been violating the Code of Conduct, please email groups.officer@utoronto.ca to report.
+We adhere to a [Code of Conduct](https://github.com/au-oc/main/blob/gh-pages/CODE_OF_CONDUCT.md)
+and by participating, you agree to also uphold this code.
 
 -----
+
 # How You Can Contribute
 
 ## Leading a Lesson
@@ -56,9 +60,9 @@ Keep it simple.
 + **Minimal use of slides**: If your lesson involves coding, keep slides to a minimum
 if at all, focus on interactive live-coding.
 + **Code Review**: The lesson code is posted to GitHub along with a pull request to
-[UofTCoders/studyGroup](https://github.com/UofTCoders/studyGroup) repository at
+[au-oc/main](https://github.com/au-oc/main) repository at
 least 1 full day prior to the lesson date to allow for review.
-See [Submitting a Pull Request](https://uoftcoders.github.io/studyGroup/pull-request/)
+See [Submitting a Pull Request](https://au-oc.github.io/main/pull-request/)
 
 
 ### Teaching in Class
@@ -81,19 +85,22 @@ See [Submitting a Pull Request](https://uoftcoders.github.io/studyGroup/pull-req
 
 There are two ways of fixing or adding to the website, either by:
 
-- Creating an [Issue](https://github.com/UofTCoders/studyGroup/issues/new)
+- Creating an [Issue](https://github.com/au-oc/main/issues/new)
 describing the problem or enhancement. This is technically not doing anything
 yourself, just recommending something to be done.
-- Submitting a Pull Request from a clone of this repo. This way takes a bit more work and requires knowledge of Git and likely HTML. But we
- would appreciate any help! No harm in giving it a try! That's a beauty of using Git, it's hard to mess up and break something.
+- Submitting a Pull Request from a clone of this repo. This way takes a bit more
+work and requires knowledge of Git and likely HTML. But we would appreciate any
+help! No harm in giving it a try! That's a beauty of using Git, it's hard to
+mess up and break something.
 
 If you want to view the website before submitting a Pull Request to make sure
 your changes are as you expect, you'll need to:
 
-- Install Jekyll by following these [instructions](https://help.github.com/articles/setting-up-your-github-pages-site-locally-with-jekyll/).
+- Install Jekyll by following these 
+[instructions](https://help.github.com/articles/setting-up-your-github-pages-site-locally-with-jekyll/).
 - To build the site locally, run `jekyll serve`.
 - The built site can also be viewed at your forked version
-(`https:://yourusername.github.io/studyGroup`).
+(`https:://yourusername.github.io/main`).
 
 ----
 
@@ -101,11 +108,17 @@ your changes are as you expect, you'll need to:
 
 ### Helping Out at Our Events
 
-We hold various sessions that incorporate code-alongs, and having the help of more advanced users to help out the beginners is very much appreciated.
-- If you see a session topic that is more beginner than your current level, we highly encourage you to attend anyway and help answer questions or provide more one-on-one support during lessons.
-- You can also lend a hand at our co-working sessions to people who have come to work on their own projects.
-- We do a call for helpers for all our Software Carpentry workshops, and we definitely wouldn't be able to run these without the help of volunteers like you!
+We hold various sessions that incorporate code-alongs, and having the help of
+more advanced users to help out the beginners is very much appreciated.
+
+- If you see a session topic that is more beginner than your current level, we
+highly encourage you to attend anyway and help answer questions or provide more
+one-on-one support during lessons.
+- We do a call for helpers for all our other workshops, and we definitely
+wouldn't be able to run these without the help of volunteers like you!
 
 ### Taking On A Leadership Role
 
-The planning and organization of our the group and our various events are done by our executive council. We hold elections every April to elect the executive council members, however, we are always open to suggestions on new roles and positions for interested members of the UofT Coders community who wish to take on more a leadership role. To read more about these positions, please see our [Council Roles](https://github.com/UofTCoders/council/blob/master/Council_Roles.md) document.
+We are still developing this group so if you are interested in taking on a larger
+role, please contact us! Best way would be to come to one of our sessions and
+talk to us!
