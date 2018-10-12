@@ -25,32 +25,6 @@ library(lubridate)
 library(glue)
 library(assertr)
 
-# Importing and Filtering the Event Data ----------------------------------
-
-session_details <- read_csv(here::here("_data", "events.csv")) %>%
-    arrange(date) %>%
-    mutate(location = str_c("Building ", loc_building, ", room ", loc_room)) %>%
-    # drop sessions that are not set (NA in location)
-    filter(!is.na(location)) %>%
-    mutate_at(vars(skill_level, program_language, spoken_language, gh_labels), str_to_title) %>%
-    mutate_at(vars(start_time, end_time), funs(strftime(., format = "%H:%M", tz = "GMT")))
-
-# Data checks to make sure it was imported correctly.
-session_details %>%
-    assert(in_set("Beginner", "Intermediate", "Advanced"), skill_level)
-
-# Find any existing posts, take the date, and filter out those sessions from the
-# session_details dataframe.
-keep_only_new_sessions <- function() {
-    existing_post_dates <- fs::dir_ls(here::here("_posts"), regexp = ".md$") %>%
-        str_extract("[0-9]{4}-[0-9]{2}-[0-9]{2}")
-
-    session_details %>%
-        filter(!as.character(date) %in% existing_post_dates)
-}
-
-new_sessions <- keep_only_new_sessions()
-
 # Create a GitHub Issue of the session ------------------------------------
 
 post_gh_issue <- function(title, body, labels) {
@@ -58,6 +32,7 @@ post_gh_issue <- function(title, body, labels) {
     # devtools::github_pat() in the console.
     devtools:::rule("Posting GitHub Issues")
     cat("Posting `", title, "`\n\n")
+
     if (!devtools:::yesno("Are you sure you want to post this event as an Issue?")) {
         gh::gh(
             "POST /repos/:owner/:repo/issues",
@@ -79,43 +54,32 @@ day_month <- function(.date) {
     trimws(format(as.Date(.date), format = "%e %B"))
 }
 
-gh_issue_info <- function(.data) {
-    content <- .data %>%
+gh_issue_content <- function(.data) {
+    .data <- .data %>%
         mutate(needs_packages = ifelse(
             !is.na(packages),
             str_c(
                 "Please also install these packages: ",
-                str_replace_all(packages, " ", ", "), "."
-            ),
-            " using the `install.packages` command."
-        )) %>%
-        glue_data(
-            "
-            {description}
+                str_replace_all(packages, " ", ", "),
+                " using the `install.packages` command."
+            )
+        ))
 
-            - **When**: {day_month(date)}, from {start_time}-{end_time}
-            - **Where**: {location}
-            - **Skill level**: {skill_level}
-            - **What to bring**: Since this is an interactive code along, it would be best if you bring your laptop!
+    issue_template <- str_c(read_lines(here::here("scripts", "issues.md")),
+                            collapse = "\r\n")
 
-            *Installation instructions*:
-
-            You will need to install the appropriate programs. See the {program_language} section of the [installation instructions page](https://au-oc.github.io/content/installation). {needs_packages}
-            "
-        )
+    content <- glue_data(.data, issue_template)
 
     .data %>%
-        mutate(content = content, title = str_c(day_month(date), ", ", title)) %>%
+        mutate(content = content, title = str_c(day_month(date), " - ", title)) %>%
         select(title, content, skill_level, gh_labels, program_language)
 }
 
-create_gh_issues <- function(.data) {
+create_event_issues <- function(.data) {
     .data %>%
-        gh_issue_info() %>%
+        gh_issue_content() %>%
         pmap( ~ post_gh_issue(..1, ..2, c(..3, ..4, ..5)))
 }
-
-create_gh_issues(new_sessions)
 
 # Create files in _posts/ -------------------------------------------------
 # Adds the new sessions/events to the _posts folder.
@@ -129,23 +93,13 @@ create_new_posts_with_content <- function(.data) {
                               owner = "au-oc",
                               repo = "Events") %>%
         map_dfr(~ data_frame(title = .$title, url = .$html_url)) %>%
-        mutate(title = str_remove(title, "^.*[1-9], "))
+        mutate(title = str_remove(title, "^[1-9].* +?[,-] +?"))
+
+    post_template <- read_file(here::here("scripts", "posts.md"))
 
     new_post_content <- .data %>%
         left_join(gh_issue_number, by = "title") %>%
-        glue_data(
-            '
-            ---
-            title: "{title}"
-            text: "{description}"
-            location: "{location}"
-            link: "{url}"
-            date: "{as.Date(date)}"
-            startTime: "{start_time}"
-            endTime: "{end_time}"
-            ---
-            '
-        )
+        glue_data(post_template)
 
     # Save post content to file
     fs::dir_create(here::here("_posts"))
@@ -153,8 +107,6 @@ create_new_posts_with_content <- function(.data) {
     usethis:::done("Markdown posts created in _posts/ folder.")
     return(invisible())
 }
-
-create_new_posts_with_content(new_sessions)
 
 # Create emails for sessions ----------------------------------------------
 
@@ -168,22 +120,7 @@ create_new_emails_for_session <- function(.data) {
             ),
             " using the `install.packages` command."
         )) %>%
-        glue_data(
-            "
-            R short workshop: {title}, {day_month(date)}
-
-            {description}
-
-            - **When**: {day_month(date)}, from {start_time}-{end_time}
-            - **Where**: {location}
-            - **Skill level**: {skill_level}
-            - **What to bring**: Since this is an interactive code along, it would be best if you bring your laptop!
-
-            *Installation instructions*:
-
-            You will need to install the appropriate programs. See the {program_language} section of the [installation instructions page](https://au-oc.github.io/content/installation). {needs_packages}
-            "
-        )
+        glue_data(read_lines(here::here("scripts", "emails.md")))
 
     fs::dir_create(here::here("_emails"))
     email_file <- glue_data(.data, "{here::here('_emails')}/{date}-{key}.md")
@@ -194,4 +131,35 @@ create_new_emails_for_session <- function(.data) {
     return(invisible())
 }
 
-create_new_emails_for_session(new_sessions)
+# Importing and Filtering the Event Data ----------------------------------
+
+session_details <- read_csv(here::here("_data", "events.csv")) %>%
+    arrange(date) %>%
+    mutate(location = glue("AU campus, building {loc_building}, room {loc_room}")) %>%
+    # drop sessions that are not set (NA in location and date)
+    filter(!is.na(location), !is.na(date)) %>%
+    mutate_at(vars(skill_level, program_language, gh_labels, series), str_to_title) %>%
+    mutate_at(vars(start_time, end_time), funs(strftime(., format = "%H:%M", tz = "GMT")))
+
+# Data checks to make sure it was imported correctly.
+session_details %>%
+    assert(in_set("Beginner", "Intermediate", "Advanced"), skill_level)
+
+# Find any existing posts, take the date, and filter out those sessions from the
+# session_details dataframe.
+keep_only_new_sessions <- function() {
+    existing_post_dates <- fs::dir_ls(here::here("_posts"), regexp = ".md$") %>%
+        str_extract("[0-9]{4}-[0-9]{2}-[0-9]{2}")
+
+    session_details %>%
+        filter(!as.character(date) %in% existing_post_dates)
+}
+
+new_sessions <- keep_only_new_sessions()
+
+# Run the functions -------------------------------------------------------
+
+create_event_issues(new_sessions)
+create_new_posts_with_content(new_sessions)
+# create_new_emails_for_session(new_sessions)
+
