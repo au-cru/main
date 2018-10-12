@@ -116,11 +116,11 @@ create_new_emails_for_session <- function(.data) {
             !is.na(packages),
             str_c(
                 "Please also install these packages: ",
-                str_replace_all(packages, " ", ", "), "."
-            ),
-            " using the `install.packages` command."
+                str_replace_all(packages, " ", ", "),
+                " using the `install.packages` command."
+            )
         )) %>%
-        glue_data(read_lines(here::here("scripts", "emails.md")))
+        glue_data(read_file(here::here("scripts", "emails.md")))
 
     fs::dir_create(here::here("_emails"))
     email_file <- glue_data(.data, "{here::here('_emails')}/{date}-{key}.md")
@@ -161,5 +161,5 @@ new_sessions <- keep_only_new_sessions()
 
 create_event_issues(new_sessions)
 create_new_posts_with_content(new_sessions)
-# create_new_emails_for_session(new_sessions)
+create_new_emails_for_session(new_sessions)
 
