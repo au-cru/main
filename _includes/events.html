@@ -29,15 +29,14 @@
                 {% endif %}
               {% endfor %}
               {% if isEvent == 0 %}
-                <a class='eventTitle' href="{{ site.github.owner_url }}/Events/issues">Nothing yet! Propose an event here.</a>
-              {% else %}
+                <a class='eventTitle' href="{{ site.github.issues_url }}">Nothing yet! Propose an event here.</a>
+              {% endif %}
               <div class="row">
                     <div class="col-lg-12 text-center">
                         <a href="{{ site.github.issues_url }}" class="btn btn-xl eventSuggest">Suggest an Event</a>
-                        <a href="{{ site.github.url }}/CONTRIBUTING" class="btn btn-xl eventSuggest">How to Lead a Session</a>
+                        <a href="{{ site.github.url }}/CONTRIBUTING" class="btn btn-xl eventSuggest">How to Lead a Session or Contribute</a>
                     </div>
               </div>
-              {% endif %}
               </ul>
             </div>
             {% if site.calendar_on %}
