@@ -11,14 +11,20 @@
     - R
     - Python
 
+- name: Elena Dudukina
+  degree: PhD student
+  github: evpatora
+  interests:
+    - R
+
 - name: Dan Søndergaard
   degree: PhD student
   github: dansondergaard
   interests:
     - Python
 
-- name: Dan Mønster
-  degree: Associate professor
-  github: danm0nster
-  interests:
-    - Python
+#- name: Dan Mønster
+#  degree: Associate professor
+#  github: danm0nster
+#  interests:
+#    - Python
