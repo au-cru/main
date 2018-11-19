@@ -30,7 +30,7 @@ library(assertr)
 post_gh_issue <- function(title, body, labels) {
     # Will need to set up a GitHub PAT via (I think) the function
     # devtools::github_pat() in the console.
-    devtools:::rule("Posting GitHub Issues")
+    cli::cat_rule("Posting GitHub Issues")
     cat("Posting `", title, "`\n\n")
 
     if (!devtools:::yesno("Are you sure you want to post this event as an Issue?")) {
@@ -62,7 +62,8 @@ gh_issue_content <- function(.data) {
                 "Please also install these packages: ",
                 str_replace_all(packages, " ", ", "),
                 " using the `install.packages` command."
-            )
+            ),
+            ""
         ))
 
     issue_template <- str_c(read_lines(here::here("scripts", "issues.md")),
@@ -117,9 +118,10 @@ create_new_emails_for_session <- function(.data) {
             str_c(
                 "Please also install these packages: ",
                 str_replace_all(packages, " ", ", "),
-                " using the `install.packages` command."
+                " using the `install.packages` command."),
+                ""
             )
-        )) %>%
+        ) %>%
         glue_data(read_file(here::here("scripts", "emails.md")))
 
     fs::dir_create(here::here("_emails"))
